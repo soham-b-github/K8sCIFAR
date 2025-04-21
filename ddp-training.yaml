@@ -1,0 +1,251 @@
+#~ apiVersion: apps/v1
+#~ kind: StatefulSet
+#~ metadata:
+  #~ name: ddp-trainer
+#~ spec:
+  #~ serviceName: "ddp"
+  #~ replicas: 2  # Number of pods to run (one for each node)
+  #~ selector:
+    #~ matchLabels:
+      #~ app: ddp-train
+  #~ template:
+    #~ metadata:
+      #~ labels:
+        #~ app: ddp-train
+    #~ spec:
+      #~ containers:
+      #~ - name: trainer
+        #~ image: darpan17/cifar10-ddp:cpu  # Use the image you pushed to Docker Hub
+        #~ imagePullPolicy: Always
+        #~ env:
+        #~ - name: WORLD_SIZE
+          #~ value: "2"  # Total number of nodes
+        #~ - name: MASTER_ADDR
+          #~ value: "ddp-trainer-0.ddp.default.svc.cluster.local"  # Master node address
+        #~ - name: MASTER_PORT
+          #~ value: "29500"  # Port for communication
+        #~ - name: RANK
+          #~ valueFrom:
+            #~ fieldRef:
+              #~ fieldPath: metadata.name  # Automatically sets rank based on pod name
+        #~ volumeMounts:
+        #~ - mountPath: /shared/cifar10  # Mount path for CIFAR10 data
+          #~ name: cifar10-vol
+      #~ volumes:
+      #~ - name: cifar10-vol
+        #~ hostPath:
+          #~ path: /shared/cifar10  # Make sure this path exists and is shared across nodes
+
+# ddp-training.yaml
+#~ apiVersion: apps/v1
+#~ kind: StatefulSet
+#~ metadata:
+  #~ name: ddp-trainer
+#~ spec:
+  #~ serviceName: "ddp"
+  #~ replicas: 2
+  #~ selector:
+    #~ matchLabels:
+      #~ app: ddp-train
+  #~ template:
+    #~ metadata:
+      #~ labels:
+        #~ app: ddp-train
+    #~ spec:
+      #~ containers:
+      #~ - name: trainer
+        #~ image: darpan17/cifar10-ddp:cpu
+        #~ env:
+        #~ - name: WORLD_SIZE
+          #~ value: "2"
+        #~ - name: MASTER_ADDR
+          #~ value: "ddp-trainer-0.ddp.default.svc.cluster.local"
+        #~ - name: MASTER_PORT
+          #~ value: "29500"
+        #~ - name: RANK
+          #~ valueFrom:
+            #~ fieldRef:
+              #~ fieldPath: metadata.name
+        #~ volumeMounts:
+        #~ - mountPath: /shared/cifar10
+          #~ name: cifar10-vol
+      #~ volumes:
+      #~ - name: cifar10-vol
+        #~ hostPath:
+          #~ path: /shared/cifar10
+
+
+#~ apiVersion: apps/v1
+#~ kind: StatefulSet
+#~ metadata:
+  #~ name: ddp-trainer
+#~ spec:
+  #~ serviceName: "ddp"
+  #~ replicas: 2
+  #~ selector:
+    #~ matchLabels:
+      #~ app: ddp-train
+  #~ template:
+    #~ metadata:
+      #~ labels:
+        #~ app: ddp-train
+    #~ spec:
+      #~ containers:
+      #~ - name: trainer
+        #~ image: darpan17/cifar10-ddp:cpu
+        #~ imagePullPolicy: Always
+        #~ env:
+        #~ - name: WORLD_SIZE
+          #~ value: "2"
+        #~ - name: MASTER_ADDR
+          #~ value: "ddp-trainer-0.ddp.default.svc.cluster.local"
+        #~ - name: MASTER_PORT
+          #~ value: "29500"
+        #~ - name: RANK
+          #~ valueFrom:
+            #~ fieldRef:
+              #~ fieldPath: metadata.name
+        #~ volumeMounts:
+        #~ - mountPath: /shared/cifar10
+          #~ name: cifar10-vol
+      #~ volumes:
+      #~ - name: cifar10-vol
+        #~ persistentVolumeClaim:
+          #~ claimName: cifar10-pvc
+
+
+#~ apiVersion: apps/v1
+#~ kind: StatefulSet
+#~ metadata:
+  #~ name: ddp-trainer
+#~ spec:
+  #~ serviceName: ddp-service
+  #~ replicas: 2
+  #~ selector:
+    #~ matchLabels:
+      #~ app: ddp
+  #~ template:
+    #~ metadata:
+      #~ labels:
+        #~ app: ddp
+    #~ spec:
+      #~ containers:
+      #~ - name: ddp-container
+        #~ image: darpan17/cifar10-ddp:cpu #yourdockerhubusername/your-image-name:latest
+        #~ volumeMounts:
+        #~ - name: shared-storage
+          #~ mountPath: /shared
+
+        #~ volumes:
+        #~ - name: shared-storage
+          #~ persistentVolumeClaim:
+            #~ claimName: shared-pvc
+
+        #~ command: ["/bin/bash", "-c"]
+        #~ args:
+          #~ - |
+            #~ MASTER_ADDR=ddp-trainer-0.ddp-service
+            #~ MASTER_PORT=29500
+            #~ RANK=${HOSTNAME##*-}
+            #~ WORLD_SIZE=2
+            #~ python3 train_ddp.py \
+              #~ --master_addr $MASTER_ADDR \
+              #~ --master_port $MASTER_PORT \
+              #~ --rank $RANK \
+              #~ --world_size $WORLD_SIZE
+        #~ resources:
+          #~ requests:
+            #~ cpu: "2"
+            #~ memory: "4Gi"
+        #~ env:
+        #~ - name: WORLD_SIZE
+          #~ value: "2"
+        #~ - name: RANK
+          #~ valueFrom:
+            #~ fieldRef:
+              #~ fieldPath: metadata.name
+        #~ - name: MASTER_ADDR
+          #~ value: ddp-trainer-0.ddp-service
+        #~ - name: MASTER_PORT
+          #~ value: "29500"
+        #~ - name: WORLD_SIZE
+          #~ value: "2"
+        #~ - name: RANK
+          #~ valueFrom:
+            #~ fieldRef:
+              #~ fieldPath: metadata.name
+
+#~ ---
+#~ apiVersion: v1
+#~ kind: Service
+#~ metadata:
+  #~ name: ddp-service
+#~ spec:
+  #~ clusterIP: None
+  #~ selector:
+    #~ app: ddp
+
+
+
+
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ddp-trainer
+spec:
+  serviceName: ddp-service
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ddp
+  template:
+    metadata:
+      labels:
+        app: ddp
+    spec:
+      containers:
+      - name: ddp-container
+        image: darpan17/cifar10-ddp:latest12
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: shared-storage
+          mountPath: /srv/nfs/cifar10 #/shared/cifar10
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            RANK=${HOSTNAME##*-}
+            WORLD_SIZE=2
+            MASTER_ADDR=ddp-trainer-0.ddp-service
+            MASTER_PORT=29500
+            echo "RANK=$RANK"
+            python3 -u train_ddp.py
+        env:
+        - name: RANK
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: WORLD_SIZE
+          value: "2"
+        - name: MASTER_ADDR
+          value: ddp-trainer-0.ddp-service
+        - name: MASTER_PORT
+          value: "29500"
+        resources:
+          requests:
+            cpu: "2"
+            memory: "4Gi"
+      volumes:
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: shared-pvc  # <-- Make sure this PVC exists!
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ddp-service
+spec:
+  clusterIP: None
+  selector:
+    app: ddp
+

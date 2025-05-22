@@ -1,11 +1,16 @@
-# K8sCIFAR: Data Parallelism using Kubernetes - ResNet18 on CIFAR-10
+<h1 align="center">K8sCIFAR</h1>
+<h3 align="center">Distributed Data Parallelism on CIFAR-10 using Kubernetes</h3>
+
+___
+
+## About
 This project demonstrates **distributed deep learning training** using **Data Parallelism** on a **two-node Kubernetes cluster**. We train a `ResNet18` model on the CIFAR-10 dataset using PyTorch and Docker, orchestrated with Kubernetes.
 This was submitted as a part of '**Enhanced Techniques for Big Data Computing**' course of **M.Sc. Big Data Analytics programme at Ramakrishna Mission Vivekananda Educational and Research Institute**.
 
-## Contributors: 
-- [Darpan Bhattacharya](https://www.linkedin.com/in/darpanbhattacharya/)
-- [Soham Bhattacharya](https://www.linkedin.com/in/bhattacharyasoham026/)
 
+## Course Project Details
+This repository contains the report, slides, and jupyter notebook and related code files for the <b>final course project</b> of the <b>Enhanced Techniques for Big Data Computing</b> offered at 
+<b>Ramakrishna Mission Vivekananda Educational and Research Institute, Belur</b> as a part of the <b>Master of Science in Big Data Analytics</b> program. <br>
 
 ## Project Overview
 
@@ -22,7 +27,7 @@ This was submitted as a part of '**Enhanced Techniques for Big Data Computing**'
 
 - Python 3.10+
 - PyTorch
-- Kubernetes (Minikube or kubeadm)
+- Kubernetes (k3s or Minikube or kubeadm)
 - Docker
 - torchvision
 - torch.distributed
@@ -44,3 +49,17 @@ This was submitted as a part of '**Enhanced Techniques for Big Data Computing**'
   - Define a StatefulSet or Deployment for each training process.
   - Use headless services + shared storage (NFS or object-store) if needed.
   - Set host networking or Service DNS for communication.
+
+## Contributors
+This project was done by the team "<b>Bhattacharya Brothers </b>", whose team members are: <br>
+- [Darpan Bhattacharya](https://www.linkedin.com/in/darpanbhattacharya/)
+- [Soham Bhattacharya](https://www.linkedin.com/in/bhattacharyasoham026/)
+
+
+-- Bhattacharya Brothers<br>
+    &nbsp;&nbsp;&nbsp;April 22, 2025
+<br>
+
+<p>
+  <img src="logo.png" alt="ChessLens Logo" width="50"/>
+</p>

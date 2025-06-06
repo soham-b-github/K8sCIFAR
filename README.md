@@ -60,6 +60,3 @@ This project was done by the team "<b>Bhattacharya Brothers </b>", whose team me
     &nbsp;&nbsp;&nbsp;April 22, 2025
 <br>
 
-<p>
-  <img src="logo.png" alt="ChessLens Logo" width="50"/>
-</p>

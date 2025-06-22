@@ -27,10 +27,8 @@ This repository contains the report, slides, and jupyter notebook and related co
 
 - Python 3.10+
 - PyTorch
-- Kubernetes (k3s or Minikube or kubeadm)
+- Kubernetes (k3s)
 - Docker
-- torchvision
-- torch.distributed
 
 ---
 
@@ -52,7 +50,7 @@ This repository contains the report, slides, and jupyter notebook and related co
 
 ## Contributors
 This project was done by the team "<b>Bhattacharya Brothers </b>", whose team members are: <br>
-- [Darpan Bhattacharya](https://www.linkedin.com/in/darpanbhattacharya/)
+- [Darpan Bhattacharya](https://www.linkedin.com/in/darpan-bhattacharya/)
 - [Soham Bhattacharya](https://www.linkedin.com/in/bhattacharyasoham026/)
 
 
